@@ -1,11 +1,11 @@
-# StayEase 🏨✨  
+🔵 coco
 A fully responsive **Hotel Booking Website** built with **React + Vite + Tailwind CSS**.  
 Users can search, filter, view hotel details, add to wishlist, and book hotels with protected routes (JWT login).
 
 ---
 
 ## 🌐 Live Demo
-👉 https://hotel-booking-website-umber.vercel.app
+👉 https://coco-flax.vercel.app
 
 ---
 
@@ -98,8 +98,3 @@ src/
  ├── App.jsx
  ├── main.jsx
 
-### Screenshots
-![Home](public/screenshots/home.png)
-![Hotels](public/screenshots/hotels.png)
-![Hotel Details](public/screenshots/details.png)
-![Bookings](public/screenshots/bookings.png)

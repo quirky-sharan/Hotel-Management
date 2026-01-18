@@ -6,7 +6,7 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [username, setUsername] = useState("kminchelle"); // DummyJSON test user
+  const [username, setUsername] = useState("kminchelle");
   const [password, setPassword] = useState("0lelplR");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,7 +24,7 @@ function Login() {
       setLoading(true);
       await login(username, password);
       navigate("/");
-    } catch (err) {
+    } catch {
       setError("Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
@@ -32,62 +32,76 @@ function Login() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-6">
-      <div className="w-full max-w-md bg-white text-gray-900 rounded-2xl shadow-xl border p-8">
-        <h1 className="text-3xl font-bold">Login</h1>
-        <p className="text-gray-500 mt-2">
-          Welcome back! Please login to continue.
+    <div className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gradient-to-br from-[#0e0e11] via-[#141418] to-[#0b0b0d]">
+      
+      {/* Ambient background glow */}
+      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-gold-400/10 rounded-full blur-[140px] animate-pulse" />
+      <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] bg-white/5 rounded-full blur-[160px]" />
+
+      {/* Glass Card */}
+      <div className="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl shadow-[0_50px_120px_rgba(0,0,0,0.7)] p-8 text-white">
+        
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Welcome back
+        </h1>
+        <p className="text-white/60 mt-2">
+          Sign in to continue your journey.
         </p>
 
         {error && (
-          <div className="mt-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+          <div className="mt-5 bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="mt-6 space-y-4">
+        <form onSubmit={handleLogin} className="mt-8 space-y-5">
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Username
-            </label>
+            <label className="text-sm text-white/70">Username</label>
             <input
               type="text"
-              className="mt-1 w-full border p-3 rounded-xl outline-none text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
+              className="mt-2 w-full bg-white/10 border border-white/20 px-4 py-3 rounded-xl
+                text-white placeholder-white/40 outline-none
+                focus:ring-2 focus:ring-gold-400 transition"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="text-sm text-white/70">Password</label>
             <input
               type="password"
-              className="mt-1 w-full border p-3 rounded-xl outline-none text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className="mt-2 w-full bg-white/10 border border-white/20 px-4 py-3 rounded-xl
+                text-white placeholder-white/40 outline-none
+                focus:ring-2 focus:ring-gold-400 transition"
             />
           </div>
 
           <button
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition disabled:opacity-70"
+            className="w-full mt-4 py-3 rounded-xl bg-gold-400 text-white font-semibold
+              hover:bg-gold-500 hover:shadow-[0_0_30px_rgba(191,167,111,0.5)]
+              transition-all duration-300 disabled:opacity-70"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
 
-        <div className="mt-6 text-sm text-gray-500">
-          Demo credentials:
-          <div className="mt-2 bg-gray-100 rounded-xl p-3 text-gray-700">
+        {/* Demo credentials */}
+        <div className="mt-8 text-sm text-white/50">
+          Demo credentials
+          <div className="mt-3 bg-black/30 border border-white/10 rounded-xl p-3">
             <p>
-              <b>Username:</b> kminchelle
+              <span className="text-white/60">Username:</span>{" "}
+              <span className="text-white">Sharan</span>
             </p>
             <p>
-              <b>Password:</b> 0lelplR
+              <span className="text-white/60">Password:</span>{" "}
+              <span className="text-white">Soni</span>
             </p>
           </div>
         </div>

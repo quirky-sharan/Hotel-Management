@@ -73,8 +73,8 @@ Users can search, filter, view hotel details, add to wishlist, and book hotels w
 ## 🧪 Demo Credentials
 Use the following to test login:
 
-- **Username:** `kminchelle`  
-- **Password:** `0lelplR`
+- **Username:** `Sharan`  
+- **Password:** `Soni`
 
 ---
 

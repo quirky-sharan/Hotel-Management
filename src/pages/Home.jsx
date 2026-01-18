@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -8,20 +8,30 @@ export default function Home() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  /* ✅ GUARANTEED-TO-LOAD IMAGES */
+  /* ✅ FAST-LOADING IMAGES (same visuals, optimized usage) */
   const destinations = [
-    { name: "Goa", img: "https://picsum.photos/id/1018/800/1200" },
-    { name: "Jaipur", img: "https://picsum.photos/id/1025/800/1200" },
-    { name: "Mumbai", img: "https://picsum.photos/id/1011/800/1200" },
-    { name: "Manali", img: "https://picsum.photos/id/1002/800/1200" },
-    { name: "Udaipur", img: "https://picsum.photos/id/1036/800/1200" },
-    { name: "Rishikesh", img: "https://picsum.photos/id/1043/800/1200" },
-    { name: "Kerala", img: "https://picsum.photos/id/1040/800/1200" },
-    { name: "Delhi", img: "https://picsum.photos/id/1050/800/1200" },
+    { name: "Goa", img: "https://picsum.photos/id/1018/600/900" },
+    { name: "Jaipur", img: "https://picsum.photos/id/1025/600/900" },
+    { name: "Mumbai", img: "https://picsum.photos/id/1011/600/900" },
+    { name: "Manali", img: "https://picsum.photos/id/1002/600/900" },
+    { name: "Udaipur", img: "https://picsum.photos/id/1036/600/900" },
+    { name: "Rishikesh", img: "https://picsum.photos/id/1043/600/900" },
+    { name: "Kerala", img: "https://picsum.photos/id/1040/600/900" },
+    { name: "Delhi", img: "https://picsum.photos/id/1050/600/900" },
   ];
 
+  /* 🔥 PRELOAD HERO IMAGE */
+  useEffect(() => {
+    const heroImg = new Image();
+    heroImg.src = "https://picsum.photos/id/1015/1920/1080";
+  }, []);
+
   const handleSearch = () => {
+    if (isNavigating) return;
+    setIsNavigating(true);
+
     const params = new URLSearchParams();
     if (destination) params.append("city", destination);
     navigate(`/hotels?${params.toString()}`);
@@ -35,7 +45,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center scale-105"
           style={{
             backgroundImage:
-              "url('https://picsum.photos/id/1015/3840/2160')",
+              "url('https://picsum.photos/id/1015/1920/1080')",
           }}
         />
         <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
@@ -77,8 +87,9 @@ export default function Home() {
 
               <button
                 onClick={handleSearch}
+                disabled={isNavigating}
                 className="flex-1 bg-gold-400 text-white font-semibold rounded-2xl
-                hover:bg-gold-500 hover:scale-[1.04] transition"
+                hover:bg-gold-500 hover:scale-[1.04] transition disabled:opacity-70"
               >
                 Search
               </button>
@@ -105,7 +116,10 @@ export default function Home() {
                   navigate(`/hotels?city=${encodeURIComponent(d.name)}`)
                 }
                 className="marquee-card"
-                style={{ backgroundImage: `url(${d.img})` }}
+                style={{
+                  backgroundImage: `url(${d.img})`,
+                  willChange: "transform",
+                }}
               >
                 <div className="absolute bottom-6 left-6 text-white">
                   <p className="text-2xl font-semibold">{d.name}</p>

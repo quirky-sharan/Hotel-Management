@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { hotels } from "../data/hotels";
 import HotelCard from "../components/HotelCard";
 import HotelCardSkeleton from "../components/HotelCardSkeleton";
@@ -8,18 +8,24 @@ const AMENITIES = ["WiFi", "Pool", "Parking", "AC"];
 const TYPES = ["Hotel", "Resort", "Apartment"];
 
 function Hotels() {
-  const [view, setView] = useState("grid");
   const [recentHotels, setRecentHotels] = useState([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const [maxPrice, setMaxPrice] = useState(7000);
   const [minRating, setMinRating] = useState(0);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [propertyType, setPropertyType] = useState("All");
+
   const [sort, setSort] = useState("popularity");
+  const [sortOpen, setSortOpen] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(9);
 
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  /* ------------------ INIT ------------------ */
   useEffect(() => {
     setRecentHotels(getRecentlyViewed());
   }, []);
@@ -44,38 +50,30 @@ function Hotels() {
     sort,
   ]);
 
-  const toggleAmenity = (a) =>
-    setSelectedAmenities((p) =>
-      p.includes(a) ? p.filter((x) => x !== a) : [...p, a]
-    );
-
-  const resetFilters = () => {
-    setSearch("");
-    setMaxPrice(7000);
-    setMinRating(0);
-    setSelectedAmenities([]);
-    setPropertyType("All");
-    setSort("popularity");
-  };
-
+  /* ------------------ FILTER LOGIC ------------------ */
   const filteredHotels = useMemo(() => {
     let list = [...hotels];
 
-    if (debouncedSearch)
+    if (debouncedSearch) {
       list = list.filter(
         (h) =>
           h.city.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
           h.name.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
+    }
 
     list = list.filter((h) => h.pricePerNight <= maxPrice);
     list = list.filter((h) => h.rating >= minRating);
-    if (propertyType !== "All")
+
+    if (propertyType !== "All") {
       list = list.filter((h) => h.type === propertyType);
-    if (selectedAmenities.length)
+    }
+
+    if (selectedAmenities.length) {
       list = list.filter((h) =>
         selectedAmenities.every((a) => h.amenities.includes(a))
       );
+    }
 
     if (sort === "priceLow") list.sort((a, b) => a.pricePerNight - b.pricePerNight);
     else if (sort === "priceHigh") list.sort((a, b) => b.pricePerNight - a.pricePerNight);
@@ -83,139 +81,137 @@ function Hotels() {
     else list.sort((a, b) => b.reviews - a.reviews);
 
     return list;
-  }, [
-    debouncedSearch,
-    maxPrice,
-    minRating,
-    selectedAmenities,
-    propertyType,
-    sort,
-  ]);
+  }, [debouncedSearch, maxPrice, minRating, selectedAmenities, propertyType, sort]);
+
+  /* ------------------ RECOMMENDED ------------------ */
+  const recommended = useMemo(() => {
+    if (!recentHotels.length) return hotels.slice(0, 3);
+    const ref = recentHotels[0];
+
+    return hotels
+      .filter((h) => h.id !== ref.id && (h.city === ref.city || h.type === ref.type))
+      .slice(0, 3);
+  }, [recentHotels]);
+
+  /* ------------------ REVEAL ANIMATION ------------------ */
+  const revealRef = useRef([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("reveal-show");
+        }),
+      { threshold: 0.1 }
+    );
+
+    revealRef.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [loading]);
 
   return (
     <div className="min-h-screen bg-[#0b0b0d] text-white">
-      <div className="max-w-7xl mx-auto px-6 py-14">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+
         {/* HEADER */}
         <div className="mb-16">
-          <h1 className="text-4xl font-semibold tracking-tight">
-            Curated Stays
-          </h1>
+          <h1 className="text-4xl font-semibold">Curated Stays</h1>
           <p className="text-white/55 mt-3 max-w-xl">
-            Thoughtfully selected hotels designed for comfort, privacy and elegance.
+            Luxury hotels selected for comfort, privacy and refined living.
           </p>
         </div>
 
-        {/* RECENTLY VIEWED */}
-        {recentHotels.length > 0 && (
-          <div className="mb-20">
-            <h2 className="text-xl font-semibold mb-6">Recently Viewed</h2>
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {recentHotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} view="grid" />
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="grid lg:grid-cols-4 gap-10">
-          {/* FILTERS */}
-          <aside className="hidden lg:block bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6 h-fit sticky top-8">
-            <div className="flex justify-between mb-6">
-              <h2 className="font-medium tracking-wide">Filters</h2>
-              <button
-                onClick={resetFilters}
-                className="text-sm text-gold-400 hover:underline"
+        {/* RECOMMENDED */}
+        <div className="mb-24">
+          <h2 className="text-xl font-semibold mb-8">Recommended for you</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {recommended.map((h, i) => (
+              <div
+                key={h.id}
+                ref={(el) => (revealRef.current[i] = el)}
+                className="reveal"
               >
-                Reset
-              </button>
-            </div>
-
-            <div className="space-y-7 text-sm">
-              <div>
-                <p className="mb-2 text-white/70">Max Price</p>
-                <input
-                  type="range"
-                  min="2000"
-                  max="8000"
-                  step="200"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(+e.target.value)}
-                  className="w-full accent-[#bfa76f]"
-                />
-                <p className="text-white/50 mt-1">₹{maxPrice}</p>
+                <HotelCard hotel={h} />
               </div>
+            ))}
+          </div>
+        </div>
 
-              <div>
-                <p className="mb-2 text-white/70">Rating</p>
-                <select
-                  className="w-full bg-white/10 border border-white/20 p-3 rounded-xl text-white"
-                  value={minRating}
-                  onChange={(e) => setMinRating(+e.target.value)}
-                >
-                  <option value={0}>All</option>
-                  <option value={4}>4+</option>
-                  <option value={4.5}>4.5+</option>
-                </select>
-              </div>
+        {/* SORT */}
+        <div className="flex justify-between items-center mb-10">
+          <div className="relative z-[100]">
+            <button
+              onClick={() => setSortOpen((p) => !p)}
+              className="px-5 py-2 rounded-full bg-white/10 border border-white/15"
+            >
+              Sort
+            </button>
 
-              <div>
-                <p className="mb-2 text-white/70">Property</p>
-                <select
-                  className="w-full bg-white/10 border border-white/20 p-3 rounded-xl text-white"
-                  value={propertyType}
-                  onChange={(e) => setPropertyType(e.target.value)}
-                >
-                  <option value="All">All</option>
-                  {TYPES.map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <p className="mb-3 text-white/70">Amenities</p>
-                <div className="space-y-2">
-                  {AMENITIES.map((a) => (
-                    <label key={a} className="flex gap-2 items-center text-white/80">
-                      <input
-                        type="checkbox"
-                        checked={selectedAmenities.includes(a)}
-                        onChange={() => toggleAmenity(a)}
-                      />
-                      {a}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* RESULTS */}
-          <section className="lg:col-span-3">
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <HotelCardSkeleton key={i} />
-                  ))
-                : filteredHotels
-                    .slice(0, visibleCount)
-                    .map((h) => <HotelCard key={h.id} hotel={h} />)}
-            </div>
-
-            {!loading && visibleCount < filteredHotels.length && (
-              <div className="mt-16 flex justify-center">
-                <button
-                  onClick={() => setVisibleCount((p) => p + 9)}
-                  className="px-10 py-3 rounded-full bg-[#bfa76f] text-black
-                    hover:bg-[#d6c28a] transition font-medium"
-                >
-                  Load More
-                </button>
+            {sortOpen && (
+              <div className="absolute right-0 mt-3 w-48 bg-black/80 backdrop-blur-xl border border-white/15 rounded-2xl overflow-hidden z-[110]">
+                {[
+                  ["popularity", "Popularity"],
+                  ["rating", "Rating"],
+                  ["priceLow", "Price ↑"],
+                  ["priceHigh", "Price ↓"],
+                ].map(([v, l]) => (
+                  <button
+                    key={v}
+                    onClick={() => {
+                      setSort(v);
+                      setSortOpen(false);
+                    }}
+                    className="w-full px-4 py-3 text-left hover:bg-white/10"
+                  >
+                    {l}
+                  </button>
+                ))}
               </div>
             )}
-          </section>
+          </div>
         </div>
+
+        {/* RESULTS */}
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <HotelCardSkeleton key={i} />
+              ))
+            : filteredHotels.slice(0, visibleCount).map((h, i) => (
+                <div
+                  key={h.id}
+                  ref={(el) => (revealRef.current[i + 5] = el)}
+                  className="reveal reveal-show"
+                >
+                  <HotelCard hotel={h} />
+                </div>
+              ))}
+        </div>
+
+        {!loading && visibleCount < filteredHotels.length && (
+          <div className="mt-20 flex justify-center">
+            <button
+              onClick={() => setVisibleCount((p) => p + 9)}
+              className="px-12 py-3 rounded-full bg-[#bfa76f] text-black hover:bg-[#d6c28a]"
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* REVEAL STYLES */}
+      <style>{`
+        .reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.7s ease;
+        }
+        .reveal-show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}</style>
     </div>
   );
 }

@@ -17,6 +17,8 @@ function HotelDetails() {
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState("");
 
+  const [activeImage, setActiveImage] = useState(0);
+
   useEffect(() => {
     if (hotel) addRecentlyViewed(hotel);
   }, [hotel]);
@@ -28,6 +30,15 @@ function HotelDetails() {
       </div>
     );
   }
+
+  // 🔥 Auto-generated luxury gallery
+  const gallery = [
+    hotel.image,
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945",
+    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b",
+    "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa",
+    "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb",
+  ];
 
   let nights = 0;
   let pricing = null;
@@ -79,17 +90,43 @@ function HotelDetails() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-14 text-white">
-      <div className="grid md:grid-cols-2 gap-12">
-        {/* Image */}
-        <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)]">
-          <img
-            src={hotel.image}
-            alt={hotel.name}
-            className="w-full h-[420px] object-cover hover:scale-105 transition-transform duration-700"
-          />
+      <div className="grid lg:grid-cols-2 gap-14">
+
+        {/* ================= IMAGE GALLERY ================= */}
+        <div>
+          {/* Main Image */}
+          <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)]">
+            <img
+              src={gallery[activeImage]}
+              alt="Hotel view"
+              className="w-full h-[420px] object-cover transition-transform duration-700 hover:scale-105"
+            />
+          </div>
+
+          {/* Thumbnails */}
+          <div className="mt-4 flex gap-4 overflow-x-auto pb-2">
+            {gallery.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveImage(i)}
+                className={`flex-shrink-0 rounded-xl overflow-hidden border
+                  ${
+                    activeImage === i
+                      ? "border-[#7fb6ff]"
+                      : "border-white/10"
+                  }`}
+              >
+                <img
+                  src={img}
+                  alt="Thumbnail"
+                  className="w-24 h-20 object-cover hover:opacity-90 transition"
+                />
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Details */}
+        {/* ================= DETAILS ================= */}
         <div>
           <h1 className="text-4xl font-semibold tracking-tight">
             {hotel.name}
@@ -100,11 +137,9 @@ function HotelDetails() {
             <span className="text-sm px-3 py-1 rounded-full bg-emerald-400/15 text-emerald-300 border border-emerald-400/30">
               ⭐ {hotel.rating}
             </span>
-
             <span className="text-sm text-white/50">
               ({hotel.reviews} reviews)
             </span>
-
             <span className="text-sm px-3 py-1 rounded-full bg-white/10 border border-white/15">
               {hotel.type}
             </span>
@@ -117,46 +152,10 @@ function HotelDetails() {
             </p>
           </div>
 
-          {/* Highlights */}
-          <div className="mt-10 grid md:grid-cols-3 gap-4">
-            <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5">
-              <p className="text-sm text-white/60">Check-in / Check-out</p>
-              <p className="mt-1 font-semibold">12:00 PM · 11:00 AM</p>
-              <p className="text-xs text-white/50 mt-2">
-                Early check-in subject to availability.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5">
-              <p className="text-sm text-white/60">Popular Amenities</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {(hotel.amenities || []).slice(0, 4).map((a) => (
-                  <span
-                    key={a}
-                    className="text-xs px-3 py-1 rounded-full bg-white/10 border border-white/15"
-                  >
-                    {a}
-                  </span>
-                ))}
-              </div>
-              <p className="text-xs text-white/50 mt-2">
-                More amenities available on request.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-5">
-              <p className="text-sm text-white/60">Cancellation</p>
-              <p className="mt-1 font-semibold">Free cancellation</p>
-              <p className="text-xs text-white/50 mt-2">
-                Cancel up to 24 hours before check-in.
-              </p>
-            </div>
-          </div>
-
           {/* Amenities */}
           <div className="mt-10">
             <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {hotel.amenities.map((a) => (
                 <span
                   key={a}
@@ -168,7 +167,7 @@ function HotelDetails() {
             </div>
           </div>
 
-          {/* Booking */}
+          {/* Booking Card */}
           <div className="mt-12 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-6 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)]">
             <h2 className="text-xl font-semibold mb-5">
               Book your stay
@@ -185,53 +184,31 @@ function HotelDetails() {
                 type="date"
                 value={checkIn}
                 onChange={(e) => setCheckIn(e.target.value)}
-                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-[#7fb6ff]"
+                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#7fb6ff]"
               />
-
               <input
                 type="date"
                 value={checkOut}
                 onChange={(e) => setCheckOut(e.target.value)}
-                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-[#7fb6ff]"
+                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#7fb6ff]"
               />
-
               <input
                 type="number"
                 min="1"
                 max="10"
                 value={guests}
                 onChange={(e) => setGuests(Number(e.target.value))}
-                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-[#7fb6ff]"
+                className="bg-white/10 border border-white/20 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#7fb6ff]"
               />
             </div>
 
-            {pricing && nights > 0 ? (
+            {pricing && nights > 0 && (
               <div className="mt-6 bg-black/30 border border-white/10 rounded-2xl p-5">
-                <h3 className="font-semibold mb-3">Price Breakdown</h3>
-                <div className="text-sm text-white/80 space-y-2">
-                  <div className="flex justify-between">
-                    <span>Base Price ({nights} nights)</span>
-                    <span>₹{pricing.basePrice}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Taxes (12%)</span>
-                    <span>₹{pricing.taxes}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Discount</span>
-                    <span>- ₹{pricing.discount}</span>
-                  </div>
-                  <hr className="border-white/10" />
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span>Total</span>
-                    <span>₹{pricing.total}</span>
-                  </div>
+                <div className="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span>₹{pricing.total}</span>
                 </div>
               </div>
-            ) : (
-              <p className="mt-5 text-sm text-white/50">
-                Select valid check-in and check-out dates to view pricing.
-              </p>
             )}
 
             <button

@@ -67,7 +67,7 @@ function Navbar() {
                 {[
                   { name: "Home", path: "/" },
                   { name: "Hotels", path: "/hotels" },
-                  { name: "Wishlist", path: "/favorites" },
+                  { name: "Liked", path: "/favorites" },
                   { name: "My Bookings", path: "/bookings" },
                   { name: "Profile", path: "/profile" },
                 ].map((item) => (

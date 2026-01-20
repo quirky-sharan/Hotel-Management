@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
-
+import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Hotels from "./pages/Hotels";
 import HotelDetails from "./pages/HotelDetails";
@@ -11,6 +11,8 @@ import Favorites from "./pages/Favorites";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
+
 function App() {
   return (
     <MainLayout>
@@ -20,6 +22,8 @@ function App() {
         <Route path="/hotels/:id" element={<HotelDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/favorites" element={<Favorites />} />
+        <Route path="/signup" element={<Signup />} />
+
 
         <Route
           path="/bookings"

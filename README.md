@@ -1,100 +1,185 @@
 🔵 coco
-A fully responsive **Hotel Booking Website** built with **React + Vite + Tailwind CSS**.  
-Users can search, filter, view hotel details, add to wishlist, and book hotels with protected routes (JWT login).
+A Premium Hotel Booking Experience
 
----
+coco is a fully responsive hotel booking web application built with React, Vite, and Tailwind CSS, focused on clean UI, smooth UX, and real-world frontend features.
 
-## 🌐 Live Demo
+Search hotels, apply smart filters, view rich hotel details, save favorites, and book stays — all wrapped in a luxurious glassmorphism-inspired design ✨
+
+🌍 Live Demo
+
+🚀 Explore the app here:
 👉 https://coco-flax.vercel.app
 
----
+✨ Highlights
 
-## 📌 Features
+Modern premium UI with glassmorphism
 
-### ✅ Authentication & Session
-- Login system using **JWT-based authentication (DummyJSON)**
-- Session persistence using **localStorage**
-- Protected routes:
-  - My Bookings
-  - Profile
-  - Wishlist/Favorites
+Fully responsive (mobile → desktop)
 
-### ✅ Hotels Search & Listings
-- Search hotels by **city / destination**
-- Responsive hotel listing cards
-- Grid / List layout toggle
-- Manual pagination using **Load More**
-- Skeleton loader UI while loading
+Realistic authentication flow
 
-### ✅ Filtering & Sorting
-- Price range slider
-- Rating filter
-- Amenities filter:
-  - WiFi
-  - Pool
-  - Parking
-  - AC
-- Property type filter:
-  - Hotel
-  - Resort
-  - Apartment
-- Sorting:
-  - Popularity
-  - Rating
-  - Price Low → High
-  - Price High → Low
+Smooth animations & micro-interactions
 
-### ✅ Hotel Details & Booking
-- Hotel details page with dynamic route
-- Booking form with:
-  - dates + guests input
-  - guest details
-  - price breakdown
-- Booking confirmation screen
-- Stores booking records locally
+Built as part of a GDG Frontend Task
 
-### ✅ My Bookings
-- View all booking history
-- Cancel bookings
-- Upcoming/past bookings separation (if implemented)
+🔐 Authentication & Session
 
-### ✅ Wishlist / Favorites (Brownie Points 🧁)
-- Add/remove hotels to wishlist
-- Favorites page to view saved hotels
+JWT-style authentication (Demo / local auth)
 
-### ✅ UX Enhancements (Brownie Points 🧁)
-- Debounced search input
-- Lazy loading for images
-- Recently viewed hotels section
-- Mobile filters drawer panel (professional UI)
+Login & Signup flow
 
----
+Session persistence using localStorage
 
-## 🧪 Demo Credentials
-Use the following to test login:
+Protected routes:
 
-- **Username:** `Sharan`  
-- **Password:** `Soni`
+📖 My Bookings
 
----
+❤️ Favorites
 
-## 🛠 Tech Stack
-- **Frontend:** React (Vite)
-- **Styling:** Tailwind CSS
-- **Routing:** React Router DOM
-- **Auth:** DummyJSON JWT Login
-- **Storage:** localStorage (session + bookings + wishlist)
+👤 Profile
 
----
+🏨 Hotels Search & Listings
 
-## 📂 Folder Structure
-```bash
+Search hotels by city / destination
+
+Elegant hotel cards with hover effects
+
+Grid / List layout toggle
+
+Manual pagination using Load More
+
+Skeleton loaders while content loads
+
+🎛 Filtering & Sorting
+
+Filter hotels using multiple parameters:
+
+🔎 Filters
+
+💰 Price range slider
+
+⭐ Rating filter
+
+🏷 Property type:
+
+Hotel
+
+Resort
+
+Apartment
+
+🧩 Amenities:
+
+WiFi
+
+Pool
+
+Parking
+
+AC
+
+🔁 Sorting
+
+Popularity
+
+Rating
+
+Price: Low → High
+
+Price: High → Low
+
+🛏 Hotel Details & Booking
+
+Dynamic hotel details page
+
+Booking form with:
+
+Check-in / Check-out dates
+
+Guests selection
+
+Price breakdown
+
+Booking confirmation
+
+All booking data stored locally for demo purposes
+
+📖 My Bookings
+
+View all bookings in one place
+
+Separate Upcoming and Past / Cancelled bookings
+
+Cancel upcoming bookings
+
+Premium card-based UI with smooth transitions
+
+❤️ Favorites
+
+Add or remove hotels from wishlist
+
+Persistent favorites using localStorage
+
+Dedicated Favorites page
+
+🚀 UX Enhancements (Brownie Points 🧁)
+
+Debounced search input
+
+Lazy loading images
+
+Recently viewed hotels
+
+Mobile-friendly filter drawer
+
+Dark / Light theme toggle
+
+Animated success states
+
+Password strength indicator
+
+Remember last login email
+
+🛠 Tech Stack
+
+⚛️ Frontend: React (Vite)
+
+🎨 Styling: Tailwind CSS
+
+🧭 Routing: React Router DOM
+
+🔐 Auth: Demo JWT-style authentication
+
+💾 Storage: localStorage (auth, bookings, wishlist)
+
+📁 Folder Structure
 src/
  ├── components/        # Reusable UI components
- ├── context/           # AuthContext / Providers
+ ├── context/           # AuthContext & providers
  ├── data/              # Mock hotel data
- ├── pages/             # Home, Hotels, Details, Login, Profile, Bookings etc.
- ├── utils/             # helper utilities (recently viewed, wishlist etc.)
+ ├── pages/             # Home, Hotels, Details, Login, Profile, Bookings
+ ├── utils/             # Helpers (auth, wishlist, recently viewed)
  ├── App.jsx
- ├── main.jsx
+ └── main.jsx
 
+🧠 What I Learned
+
+Building scalable React components
+
+State management & protected routing
+
+UX-first frontend design
+
+Handling authentication & persistence
+
+Writing clean, maintainable frontend code
+
+🙌 Acknowledgements
+
+This project was built as part of a GDG Frontend Task.
+AI tools were used as an assistant, not as a replacement — every feature was understood, customized, and implemented intentionally.
+
+⭐ Final Note
+
+If you like the project or the UI/UX approach, feel free to ⭐ the repo or drop feedback.
+Always open to learning and improving 🚀
